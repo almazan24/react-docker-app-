@@ -1,0 +1,23 @@
+# Declaramos nuestra primera etapa (stage) con la parte AS build
+FROM node:18 AS build 
+
+WORKDIR /app
+
+COPY ./package.json ./
+
+RUN npm install
+
+COPY ./ ./
+
+#  Fijamos la variable de entorno para evitar el error de OpenSSL
+ENV NODE_OPTIONS="--openssl-legacy-provider"
+
+RUN npm run build
+
+# Inicia nuestra siguiente stage
+FROM nginx
+
+# Copiaremos los archivos generados desde la fase build hacia el directorio de Nginx
+COPY --from=build /app/build /usr/share/nginx/html 
+
+
