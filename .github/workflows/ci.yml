@@ -1,0 +1,46 @@
+name: Build and Deploy React App
+
+on:
+  push:
+    branches:
+      - main  # Se ejecuta cuando se hace push a main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Se ejecuta en un servidor Ubuntu
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: build/
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+          path: build/
+
+      - name: Deploy (Ejemplo: subir a Firebase)
+        run: |
+          npm install -g firebase-tools
+          firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
