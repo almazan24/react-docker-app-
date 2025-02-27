@@ -2,6 +2,7 @@ version: "3"
 services:
   react-app:
     container_name: react-app
+    image: react-app:latest  # <- Agrega esta línea
     build: 
       context: .
       dockerfile: Dockerfile.dev
@@ -10,5 +11,4 @@ services:
     volumes:
       - /app/node_modules
       - ./:/app
-
 
