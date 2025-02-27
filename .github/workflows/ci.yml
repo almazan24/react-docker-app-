@@ -1,31 +1,16 @@
-name: Deploy React App
-
-on:
-  push:
-    branches:
-      - main
-
+version: 2.1
 jobs:
   build:
-    runs-on: ubuntu-latest
+    docker:
+      - image: circleci/node:18  # Usa Node.js 18 LTS
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build project
-        run: npm run build
-
-      - name: Build Docker image
-        run: docker build -t my-react-app .
-
-      - name: Run Docker container
-        run: docker run -d -p 80:80 my-react-app
-
+      - checkout
+      - run:
+          name: Verificar versión de Node.js
+          command: node -v
+      - run:
+          name: Instalar dependencias
+          command: npm install
+      - run:
+          name: Construir aplicación
+          command: npm run build
