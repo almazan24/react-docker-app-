@@ -1,0 +1,25 @@
+name: Deploy React App with Docker Compose
+
+on:
+  push:
+    branches:
+      - main  # Se ejecuta cuando hay cambios en main
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest  # Usa una máquina virtual en GitHub Actions
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3  # Clona el repositorio
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3  # Prepara Docker para construir imágenes
+
+      - name: Build and run Docker Compose
+        run: |
+          docker-compose -f docker-compose.yml up -d --build
+
+      - name: Verify running containers
+        run: docker ps -a
+
